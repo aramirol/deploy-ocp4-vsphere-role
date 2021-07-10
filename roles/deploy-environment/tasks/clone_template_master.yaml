@@ -1,0 +1,29 @@
+---
+
+- name:  Clone a ETCD virtual machine from rhcos-template and customize
+  vmware_guest:
+    hostname: "{{ secret.vcenter }}"
+    username: "{{ secret.username }}"
+    password: "{{ secret.password }}"
+    validate_certs: no
+    datacenter: "{{ secret.datacenter }}"
+    cluster: "{{ secret.cluster }}"
+    folder: /DC_HUMAREDA/vm/ocp4-demo
+    state: present
+    template: "rhcos-template"
+    name: "{{ item }}"
+    customvalues:
+    - key: "disk.EnableUUID"
+      value: "TRUE"
+    - key: "guestinfo.ignition.config.data.encoding"
+      value: "base64"
+    - key: "guestinfo.ignition.config.data"
+      value: "{{ append_master_info.stdout }}"
+    hardware:
+      memory_mb: 8192
+      num_cpus: 4
+  with_items:
+    - etcd-0.{{ secret.ocp_cluster_name }}.{{ secret.ocp_domain_name }}
+    - etcd-1.{{ secret.ocp_cluster_name }}.{{ secret.ocp_domain_name }}
+    - etcd-2.{{ secret.ocp_cluster_name }}.{{ secret.ocp_domain_name }}
+#  delegate_to: localhost

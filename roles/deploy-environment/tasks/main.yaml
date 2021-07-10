@@ -1,0 +1,36 @@
+---
+
+- name: Gathering facts
+  setup:
+
+# Environment required vars
+- name: Including Secret Environment Items
+  include_vars:
+    file: vars/secret.yaml
+    name: secret
+
+# Test connections
+- include: connection/test_connection.yaml
+
+# Prerequirements and generate OS taks
+- include: prerequirements.yaml
+- include: create_install_dir.yaml
+- include: ssh_id_rsa.yaml
+- include: fetch_installer_client.yaml
+- include: copy_install_config.yaml
+
+# OpenShift Deploy
+- include: generate_manifest.yaml
+- include: create_ignition_files.yaml
+
+# Download OVA and create VMs.
+- include: download_ova.yaml
+- include: upgrade_ova_vsphere.yaml
+- include: disk_customization.yaml
+- include: create_vsphere_folder.yaml
+- include: clone_template_bootstrap.yaml
+- include: clone_template_master.yaml
+- include: clone_template_compute.yaml
+#- include: clone_template_infra.yaml
+#- include: clone_template_storage.yaml
+- include: first_resume.yaml

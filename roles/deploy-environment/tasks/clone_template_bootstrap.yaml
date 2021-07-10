@@ -1,0 +1,24 @@
+---
+  
+- name:  Clone a BOOTSTRAP virtual machine from rhcos-template and customize
+  vmware_guest:
+    hostname: "{{ secret.vcenter }}"
+    username: "{{ secret.username }}"
+    password: "{{ secret.password }}"
+    validate_certs: no
+    datacenter: "{{ secret.datacenter }}"
+    cluster: "{{ secret.cluster }}"
+    folder: "/{{ secret.datacenter}}/vm/{{ secret.ocp_cluster_name }}"
+    state: present
+    template: "rhcos-template"
+    name: "{{ item }}"
+    customvalues:
+    - key: "disk.EnableUUID"
+      value: "TRUE"
+    - key: "guestinfo.ignition.config.data.encoding"
+      value: "base64"
+    - key: "guestinfo.ignition.config.data"
+      value: "{{ append_bootstrap_info.stdout }}"
+  with_items:
+    - bootstrap.{{ secret.ocp_cluster_name }}.{{ secret.ocp_domain_name }}
+#  delegate_to: localhost

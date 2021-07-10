@@ -1,0 +1,19 @@
+---
+
+- name: generate the Kubernetes manifests for the cluster
+  shell: "/usr/local/bin/openshift-install create manifests --dir={{ secret.install_dir }}"
+
+- pause: seconds=30
+
+- name: prevent Pods from being scheduled on the control plane machines
+  replace:
+    path: "{{ secret.install_dir }}/manifests/cluster-scheduler-02-config.yml"
+    before: 'policy'
+    regexp: 'true'
+    replace: 'false'
+    backup: yes
+
+- name: remove the Kubernetes manifest files that define the control plane machines and compute machineSets
+  shell: "rm -f {{ secret.install_dir }}/openshift/99_openshift-cluster-api_master-machines-*.yaml {{ secret.install_dir }}/openshift/99_openshift-cluster-api_worker-machineset-*.yaml"
+
+- pause: seconds=30

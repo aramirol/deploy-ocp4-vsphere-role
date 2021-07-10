@@ -1,0 +1,36 @@
+---
+
+- name: Wait for RHCOS VMs start 300 seconds
+  wait_for_connection:
+    delay: 10
+    timeout: 600
+
+- debug:
+    msg:
+    - "------------------------------------------------"
+    - ""
+    - "The next step can take up to 40 minutes."   
+    - ""
+    - "------------------------------------------------"
+    - ""
+    - "Cluster: {{secret.ocp_cluster_name}}"
+    - "Base Domain: {{secret.ocp_domain_name}}"
+    - ""
+    - "You can follow the progress from install log"
+    - "{{ secret.bastion_ip}}:{{secret.install_dir}}/.openshift_install.log"
+    - ""
+    - "Be patient"
+
+
+- name: create cluster {{ secret.ocp_cluster_name}}.{{ secret.ocp_domain_name }}
+  shell: "/usr/local/bin/openshift-install --dir={{ secret.install_dir }} wait-for bootstrap-complete --log-level debug"
+
+- pause: seconds=300
+
+- name: get create cluster stdout
+  shell: tail -6 {{ secret.install_dir }}/.openshift_install.log
+  register: create_cluster_status
+- name: show create cluster stdout
+  debug:
+    msg: "{{create_cluster_status.stdout_lines}}"
+

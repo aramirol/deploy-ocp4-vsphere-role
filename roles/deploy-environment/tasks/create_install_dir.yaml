@@ -1,0 +1,6 @@
+---
+
+- name: Creates directory
+  file:
+    path: '{{ secret.install_dir }}'
+    state: directory

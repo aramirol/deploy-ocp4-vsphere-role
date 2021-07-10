@@ -1,0 +1,7 @@
+--- 
+
+- name: Downloading RHCOS ova file
+  get_url:
+    url: '{{ secret.ova_url }}'
+    dest: '{{ secret.base_dir }}/rhcos-template.ova'
+    mode: '644'

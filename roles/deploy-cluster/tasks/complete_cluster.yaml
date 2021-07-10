@@ -1,0 +1,11 @@
+---
+
+- name: Complete cluster creation
+  shell: "/usr/local/bin/openshift-install --dir={{ secret.install_dir }} wait-for install-complete"
+
+- name: connection resume cluster install
+  shell: tail -4 {{ secret.install_dir }}/.openshift_install.log
+  register: connection_resume
+- name: viewing connection resume stdout
+  debug:
+    msg: "{{connection_resume.stdout_lines}}"

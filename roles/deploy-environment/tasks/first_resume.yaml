@@ -1,0 +1,12 @@
+---
+
+- debug:
+    msg:
+    - "------------------------------------------------"
+    - "    ¡ ¡  C O N G R A T U L A T I O N S  ! !"   
+    - "------------------------------------------------"
+    - "            FIRST PART HAS FINISHED"
+    - "------------------------------------------------"
+    - "       Before launch deploy-cluster.yaml"
+    - "   take MAC address info from VMs nodes and" 
+    - "          reserve IP on DHCP server"

@@ -1,0 +1,98 @@
+---
+
+# POWERING ON BOOTSTRAP NODE
+- name: Power on BOOTSTRAP nodes OCP4 test
+  vmware_guest_powerstate:
+    hostname: "{{secret.vcenter}}"
+    username: "{{secret.username}}"
+    password: "{{secret.password}}"
+    folder: "{{secret.datacenter}}/vm/{{secret.ocp_cluster_name}}"    
+    name: "{{ item }}"
+    state: powered-on
+    validate_certs: no
+  with_items:
+    - bootstrap.ocp4-demo.cloudservices.int
+  delegate_to: localhost
+  register: deploy 
+
+- name: Wait until BOOTSTRAP nodes are powered on
+  vmware_guest_info: 
+    hostname: "{{secret.vcenter}}"
+    username: "{{secret.username}}"
+    password: "{{secret.password}}"
+    datacenter: "{{secret.datacenter}}"
+    validate_certs: no
+    name: "{{ item }}"
+  loop:
+    - bootstrap.ocp4-demo.cloudservices.int
+  register: power
+  until: power.instance.hw_power_status == "poweredOn"
+  retries: 30 # 30 * 1 seconds = 30 seconds
+  delay: 1 # Every 1 seconds
+
+# POWERING ON ETCD NODES
+- name: Power on ETCD nodes OCP4 test
+  vmware_guest_powerstate:
+    hostname: "{{secret.vcenter}}"
+    username: "{{secret.username}}"
+    password: "{{secret.password}}"
+    folder: "{{secret.datacenter}}/vm/{{secret.ocp_cluster_name}}"    
+    name: "{{ item }}"
+    state: powered-on
+    validate_certs: no
+  with_items:
+    - etcd-0.ocp4-demo.cloudservices.int
+    - etcd-1.ocp4-demo.cloudservices.int
+    - etcd-2.ocp4-demo.cloudservices.int
+  delegate_to: localhost
+  register: deploy
+
+- name: Wait until ETCD nodes are powered on
+  vmware_guest_info: 
+    hostname: "{{secret.vcenter}}"
+    username: "{{secret.username}}"
+    password: "{{secret.password}}"
+    datacenter: "{{secret.datacenter}}"
+    validate_certs: no
+    name: "{{ item }}"
+  loop:
+    - etcd-0.ocp4-demo.cloudservices.int
+    - etcd-1.ocp4-demo.cloudservices.int
+    - etcd-2.ocp4-demo.cloudservices.int
+  register: power
+  until: power.instance.hw_power_status == "poweredOn"
+  retries: 30 # 30 * 1 seconds = 30 seconds
+  delay: 1 # Every 1 seconds
+
+
+
+# POWERING ON COMPPUTE NODE
+- name: Power on COMPUTE nodes OCP4 test
+  vmware_guest_powerstate:
+    hostname: "{{secret.vcenter}}"
+    username: "{{secret.username}}"
+    password: "{{secret.password}}"
+    folder: "{{secret.datacenter}}/vm/{{secret.ocp_cluster_name}}"    
+    name: "{{ item }}"
+    state: powered-on
+    validate_certs: no
+  with_items:
+    - compute-1.ocp4-demo.cloudservices.int
+  delegate_to: localhost
+  register: deploy 
+
+- name: Wait until COMPUTE nodes are powered on
+  vmware_guest_info: 
+    hostname: "{{secret.vcenter}}"
+    username: "{{secret.username}}"
+    password: "{{secret.password}}"
+    datacenter: "{{secret.datacenter}}"
+    validate_certs: no
+    name: "{{ item }}"
+  loop:
+    - compute-1.ocp4-demo.cloudservices.int
+  register: power
+  until: power.instance.hw_power_status == "poweredOn"
+  retries: 30 # 30 * 1 seconds = 30 seconds
+  delay: 1 # Every 1 seconds
+

@@ -1,0 +1,28 @@
+---
+
+- name: fetch installer
+  get_url:
+    url: "{{ secret.installer_url }}"
+    dest: "{{ secret.base_dir }}/{{ secret.installer_name }}"
+
+- name: extract installer
+  become: true
+  unarchive:
+    src: "{{ secret.base_dir }}/{{ secret.installer_name }}"
+    dest: /usr/local/bin
+    mode: +x
+    remote_src: yes
+
+
+- name: fetch client
+  get_url:
+    url: "{{ secret.client_url  }}"
+    dest: "{{ secret.base_dir }}/{{ secret.client_name }}"
+
+- name: extract client
+  become: true
+  unarchive:
+    src: "{{ secret.base_dir }}/{{ secret.client_name }}"
+    dest: /usr/local/bin
+    mode: +x
+    remote_src: yes

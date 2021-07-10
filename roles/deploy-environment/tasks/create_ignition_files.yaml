@@ -1,0 +1,79 @@
+---
+
+# CREATE IGNITION FILES
+- name: create ignition configs
+  shell: "/usr/local/bin/openshift-install create ignition-configs --dir={{ secret.install_dir }}"
+
+# CREATE APPEND FILES
+- name: create append-bootstrap file
+  template:
+    src: templates/append-bootstrap.ign.j2
+    dest: "{{ secret.install_dir }}/append-bootstrap.ign"
+
+- name: create append-master file
+  template:
+    src: templates/append-master.ign.j2
+    dest: "{{ secret.install_dir }}/append-master.ign"
+
+- name: create append-compute file
+  template:
+    src: templates/append-worker.ign.j2
+    dest: "{{ secret.install_dir }}/append-worker.ign"
+
+# CONVERT APPEND FILES TO BASE64
+- name: create base64 files from required ignition files
+  shell:
+    cmd: |
+      base64 -w0 "{{ secret.install_dir }}/append-master.ign" > "{{ secret.install_dir }}/append-master.64"
+      base64 -w0 "{{ secret.install_dir }}/append-worker.ign" > "{{ secret.install_dir }}/append-worker.64"
+      base64 -w0 "{{ secret.install_dir }}/append-bootstrap.ign" > "{{ secret.install_dir }}/append-bootstrap.64"
+
+# COPY IGNITION FILES TO HTTP HOST
+- name: copy bootstrap ignition file to public dir
+  become: true
+  copy:
+    src: "{{ secret.install_dir }}/bootstrap.ign"
+    dest: /var/www/html/bootstrap.ign
+    remote_src: yes
+
+- name: copy master ignition file to public dir
+  become: true
+  copy:
+    src: "{{ secret.install_dir }}/master.ign"
+    dest: /var/www/html/master.ign
+    remote_src: yes
+
+- name: copy worker ignition file to public dir
+  become: true
+  copy:
+    src: "{{ secret.install_dir }}/worker.ign"
+    dest: /var/www/html/worker.ign
+    remote_src: yes
+
+# GET APPEND INFO
+- name: get append-bootstrap ign info
+  command: cat {{ secret.install_dir }}/append-bootstrap.64
+  register: append_bootstrap_info
+  become: true
+
+- name: viewing the contents
+  debug:
+    msg: "{{append_bootstrap_info.stdout}}"
+
+- name: get master ign info
+  command: cat {{ secret.install_dir }}/append-master.64
+  register: append_master_info
+  become: true
+
+- name: viewing the contents
+  debug:
+    msg: "{{append_master_info.stdout}}"
+
+- name: get worker ign info
+  command: cat {{ secret.install_dir }}/append-worker.64
+  register: append_worker_info
+  become: true
+
+- name: viewing the contents
+  debug:
+    msg: "{{append_worker_info.stdout}}"

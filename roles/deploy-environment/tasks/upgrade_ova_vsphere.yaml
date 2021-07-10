@@ -1,0 +1,23 @@
+---
+
+#- name: copy ova file to public dir
+#  become: true
+#  copy:
+#    src: '{{secret.base_dir }}/rhcos-template.ova'
+#    dest: /var/www/html/rhcos-template.ova
+#    remote_src: yes
+
+- vmware_deploy_ovf:
+    hostname: '{{ secret.vcenter }}'
+    username: '{{ secret.username }}'
+    password: '{{ secret.password }}'
+    datacenter: '{{ secret.datacenter }}'
+    cluster: '{{ secret.cluster }}'
+    datastore: '{{ secret.datastore }}'
+    name: rhcos-template
+    disk_provisioning: thin
+    networks: "{u'VM Network':u'{{ secret.network }}'}"
+    validate_certs: no
+    allow_duplicates: no
+    power_on: no
+    ovf: '{{ secret.base_dir}}/rhcos-template.ova'

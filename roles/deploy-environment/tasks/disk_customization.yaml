@@ -1,0 +1,21 @@
+---
+  
+- name: resizing disk on rhcos-template
+  vmware_guest_disk:
+    hostname: "{{ secret.vcenter }}"
+    username: "{{ secret.username }}"
+    password: "{{ secret.password }}"
+    datacenter: "{{ secret.datacenter }}"
+    folder: "{{ secret.datacenter}}/vm"
+    validate_certs: no
+    name: 'rhcos-template'
+    disk:
+      - size_gb: 120
+        type: thin
+        datastore: '{{ secret.datastore }}'
+        state: present
+        scsi_controller: 0
+        unit_number: 0
+        scsi_type: 'paravirtual'
+  delegate_to: localhost
+  register: disk_facts

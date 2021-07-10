@@ -1,0 +1,22 @@
+---
+
+- name: Gathering facts
+  setup:
+
+# Environment required vars
+- name: Including Secret Environment Items
+  include_vars:
+    file: vars/secret.yaml
+    name: secret
+
+# Test connections
+- include: connection/test_connection.yaml
+
+# Deploy cluster
+- include: power_on_vms.yaml
+- include: create_cluster.yaml
+- include: add_kubeconfig.yaml
+- include: approve_csr.yaml
+- include: patching_registry.yaml
+- include: complete_cluster.yaml
+- include: second_resume.yaml

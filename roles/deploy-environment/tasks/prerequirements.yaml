@@ -1,0 +1,31 @@
+---
+
+- name: Stop and disable firewalld.
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+  become: true
+
+- name: install the latest version of Apache
+  yum:
+    name: httpd
+    state: present
+  become: true
+
+- name: start httpd server
+  become: true
+  service:
+    name: httpd
+    state: restarted
+
+- name: install python2-pip
+  yum:
+    name: python2-pip
+    state: present
+  become: true
+
+- name: pyvmomi install
+  become: true
+  pip:
+    name: pyvmomi

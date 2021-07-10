@@ -1,0 +1,14 @@
+---
+
+- name: Create a VM folder on given datacenter
+  vcenter_folder:
+    hostname: '{{ secret.vcenter }}'
+    username: '{{ secret.username }}'
+    password: '{{ secret.password }}'
+    validate_certs: no
+    datacenter_name: '{{ secret.datacenter }}'
+    folder_name: '{{ secret.ocp_cluster_name }}'
+    folder_type: vm
+    state: present
+  register: vm_folder_creation_result
+#  delegate_to: localhost

@@ -1,0 +1,6 @@
+---
+
+- hosts: bastion_ocp
+  gather_facts: true
+  roles:
+   - deploy-environment

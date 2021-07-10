@@ -1,0 +1,8 @@
+---
+  
+- name: copy config file to referrence place-connected
+  template:
+    src: templates/install-config.yaml
+    dest: '{{ secret.install_dir }}/install-config.yaml'
+    mode: 0644
+

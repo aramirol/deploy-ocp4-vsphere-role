@@ -1,0 +1,20 @@
+---
+
+- name: Create keys
+  shell: ssh-keygen -t rsa -b 4096 -N '' -f {{ secret.base_dir }}/id_rsa_{{ secret.ocp_cluster_name }}
+  args:
+    creates: '{{ secret.base_dir }}/id_rsa_{{ secret.ocp_cluster_name }}'
+    
+- name: Start the ssh-agent process as a background task
+  shell:
+    cmd: |
+      eval "$(ssh-agent -s)" && ssh-add {{ secret.base_dir }}/id_rsa_{{ secret.ocp_cluster_name }}
+ 
+- name: get contents of file
+  command: cat {{ secret.base_dir }}/id_rsa_{{ secret.ocp_cluster_name }}.pub
+  register: filename
+  become: true
+
+- name: viewing the contents
+  debug:
+    msg: "{{filename.stdout}}"
