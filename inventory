@@ -1,2 +1,2 @@
 [bastion_ocp]
-10.228.129.242 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=temporal
+<IP_ADDRESS> ansible_connection=ssh ansible_ssh_user=<user> ansible_ssh_pass=<password>
