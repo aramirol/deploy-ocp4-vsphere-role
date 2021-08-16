@@ -1,8 +1,8 @@
 # **Deploy UPI OpenShift Container Platform installation over vSphere**
 
-![Build](.badges/platform-OpenShift-red.svg)
-![Build](.badges/provider-Red_Hat-red.svg)
-![Build](.badges/platform-VMware-green.svg)
+![](https://img.shields.io/badge/platform-openshift-red?logo=redhatopenshift&logoColor=red)
+![](https://img.shields.io/badge/provider-redhat-red?logo=redhat&logoColor=red)
+![](https://img.shields.io/badge/platform-vsphere-green?logo=vmware&logoColor=white)
 
 <img src=".logos/openshift-vsphere.png" data-canonical-src=".logos/openshift-vsphere.png" width="50%" height="50%" />
 
